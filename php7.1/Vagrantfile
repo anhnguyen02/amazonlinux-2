@@ -1,0 +1,23 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+    config.vm.box = "bento/amazonlinux-2"
+    config.vm.box_version = "1.2.1"
+    config.vm.network "private_network", ip: "192.168.71.10";
+    config.vm.provider "virtualbox" do |vb|
+        vb.name = "S_PHP7.1"
+        vb.customize ["modifyvm", :id, "--memory", "2048"] #bộ nhớ máy ảo
+        vb.customize ["modifyvm", :id, "--cpus", "1"] #cấp số nhân CPU
+    end
+
+    config.vm.provision "shell", path: "../apache/install.sh"
+    config.vm.provision "shell", path: "./install.sh"
+
+    config.vm.synced_folder "./projects", "/var/www/html", type: "nfs"
+
+    config.vm.provision "shell", inline: <<-SHELL
+        #code
+    SHELL
+    
+end
